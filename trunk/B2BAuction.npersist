@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<domain name="B2BAuction" language="VB" source="B2BAuction">
+  <class name="CreditRating" table="Credit_Rating">
+    <property name="Id" id="true" columns="Credit_Rating_Id" type="System.Decimal" />
+    <property name="Description" columns="Description" type="System.String" />
+    <property name="Customers" table="Customer" id-columns="Credit_Rating_ID" list="true" item-type="Customer" slave="true" ref="ManyToOne" inverse="CreditRating" inherits-inverse="true" />
+  </class>
+  <class name="Customer" table="Customer">
+    <property name="Id" id="true" columns="Customer_ID" type="System.Decimal" />
+    <property name="CompanyName" columns="Company_Name" type="System.Byte()" />
+    <property name="Address" columns="Address" type="System.String" />
+    <property name="City" columns="City" type="System.String" />
+    <property name="Zipcode" columns="Zipcode" type="System.String" />
+    <property name="State" columns="State" type="System.String" />
+    <property name="Country" columns="Country" type="System.String" />
+    <property name="Phone" columns="Phone" type="System.String" />
+    <property name="Fax" columns="Fax" type="System.String" />
+    <property name="Email" columns="Email" type="System.String" />
+    <property name="BusinessCategory" columns="Business_Category_Id" ref="OneToMany" inverse="Customers" type="ItemCategory" />
+    <property name="LoginID" columns="Login_ID" type="System.String" />
+    <property name="Password" columns="Password" type="System.String" />
+    <property name="CreditRating" columns="Credit_Rating_ID" ref="OneToMany" inverse="Customers" type="CreditRating" />
+    <property name="JoinDate" columns="Join_Date" type="System.DateTime" />
+    <property name="Items" table="Item" id-columns="Customer_Id" list="true" item-type="Item" slave="true" ref="ManyToOne" inverse="Customer" inherits-inverse="true" />
+    <property name="Bids" table="Bid" id-columns="Customer_Id" list="true" item-type="Bid" slave="true" ref="ManyToOne" inverse="Customer" inherits-inverse="true" />
+  </class>
+  <class name="ItemCondition" table="Item_Condition">
+    <property name="Id" id="true" columns="Item_Condition_Id" type="System.Decimal" />
+    <property name="Description" columns="Description" type="System.String" />
+    <property name="Items" table="Item" id-columns="Item_Condition_Id" list="true" item-type="Item" slave="true" ref="ManyToOne" inverse="ItemCondition" inherits-inverse="true" />
+  </class>
+  <class name="Item" table="Item">
+    <property name="Shipments" table="Shipment_Item" columns="Shipment_Id" id-columns="Item_Id" list="true" item-type="Shipment" ref="ManyToMany" inverse="Items" />
+    <property name="Item" id="true" columns="Item_Id" ref="OneToOne" inverse="Item1" type="Item" />
+    <property name="Item1" table="Item" columns="Item_Id" id-columns="Item_Id" slave="true" ref="OneToOne" inverse="Item" inherits-inverse="true" type="Item" />
+    <property name="Customer" columns="Customer_Id" ref="OneToMany" inverse="Items" type="Customer" />
+    <property name="ItemCategory" columns="Item_Category_Id" ref="OneToMany" inverse="Items" type="ItemCategory" />
+    <property name="Title" columns="Title" type="System.String" />
+    <property name="Description" columns="Description" type="System.String" />
+    <property name="Quantity" columns="Quantity" type="System.Decimal" />
+    <property name="Price" columns="Price" type="System.Double" />
+    <property name="ItemCondition" columns="Item_Condition_Id" ref="OneToMany" inverse="Items" type="ItemCondition" />
+    <property name="BiddingStartDate" columns="Bidding_Start_Date" type="System.DateTime" />
+    <property name="BiddingEndDate" columns="Bidding_End_Date" type="System.DateTime" />
+    <property name="SuccessfulBid" columns="Successful_Bid_Id" ref="OneToMany" inverse="Items" type="Bid" />
+    <property name="Comment" columns="Comment" type="System.String" />
+  </class>
+  <class name="Payment" table="Payment">
+    <property name="Id" id="true" columns="Payment_Id" type="System.Decimal" />
+    <property name="PaymentMethod" columns="Payment_Method_Id" ref="OneToMany" inverse="Payments" type="PaymentMethod" />
+    <property name="PaymentDate" columns="Payment_Date" type="System.DateTime" />
+    <property name="Bids" table="Bid" id-columns="Payment_Id" list="true" item-type="Bid" slave="true" ref="ManyToOne" inverse="Payment" inherits-inverse="true" />
+  </class>
+  <class name="PaymentMethod" table="Payment_Method">
+    <property name="Payments" table="Payment" id-columns="Payment_Method_Id" list="true" item-type="Payment" slave="true" ref="ManyToOne" inverse="PaymentMethod" inherits-inverse="true" />
+    <property name="Id" id="true" columns="Payment_Method_id" type="System.Decimal" />
+    <property name="Description" columns="Description" type="System.String" />
+  </class>
+  <class name="ShipmentMode" table="Shipment_Mode">
+    <property name="Id" id="true" columns="Shipment_Mode_Id" type="System.Decimal" />
+    <property name="Description" columns="Description" type="System.String" />
+  </class>
+  <class name="Shipment" table="Shipment">
+    <property name="Items" table="Shipment_Item" columns="Item_Id" id-columns="Shipment_Id" list="true" item-type="Item" slave="true" ref="ManyToMany" inverse="Shipments" inherits-inverse="true" />
+    <property name="Id" id="true" columns="Shipment_Id" type="System.Decimal" />
+    <property name="ShipmentModeId" columns="Shipment_Mode_Id" type="System.Decimal" />
+    <property name="Cost" columns="Cost" type="System.Double" />
+    <property name="Comment" columns="Comment" type="System.String" />
+    <property name="Bids" table="Bid" id-columns="Shipment_Id" list="true" item-type="Bid" slave="true" ref="ManyToOne" inverse="Shipment" inherits-inverse="true" />
+  </class>
+  <class name="Bid" table="Bid">
+    <property name="Items" table="Item" id-columns="Successful_Bid_Id" list="true" item-type="Item" slave="true" ref="ManyToOne" inverse="SuccessfulBid" inherits-inverse="true" />
+    <property name="Id" id="true" columns="Bid_Id" type="System.Decimal" />
+    <property name="ItemId" columns="Item_Id" type="System.Decimal" />
+    <property name="Customer" columns="Customer_Id" ref="OneToMany" inverse="Bids" type="Customer" />
+    <property name="Amount" columns="Amount" type="System.Double" />
+    <property name="Payment" columns="Payment_Id" ref="OneToMany" inverse="Bids" type="Payment" />
+    <property name="Shipment" columns="Shipment_Id" ref="OneToMany" inverse="Bids" type="Shipment" />
+    <property name="Comment" columns="Comment" type="System.String" />
+  </class>
+  <class name="ItemCategory" table="Item_Category">
+    <property name="Customers" table="Customer" id-columns="Business_Category_Id" list="true" item-type="Customer" slave="true" ref="ManyToOne" inverse="BusinessCategory" inherits-inverse="true" />
+    <property name="Items" table="Item" id-columns="Item_Category_Id" list="true" item-type="Item" slave="true" ref="ManyToOne" inverse="ItemCategory" inherits-inverse="true" />
+    <property name="Id" id="true" columns="Item_category_ID" type="System.Decimal" />
+    <property name="Description" columns="Description" type="System.String" />
+  </class>
+  <source name="B2BAuction" type="MSSqlServer" provider="SqlClient" schema="dbo">
+    <connection-string>Server=YALPA\SQLEXPRESS;Database=Auction;User ID=auction;Password=auction;Trusted_Connection=False</connection-string>
+    <table name="Credit_Rating">
+      <column name="Credit_Rating_Id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Description" type="AnsiString" prec="50" allow-null="true" length="50" scale="0" />
+    </table>
+    <table name="Customer">
+      <column name="Customer_ID" primary="true" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Company_Name" type="Binary" prec="50" allow-null="true" length="50" scale="0" />
+      <column name="Address" type="AnsiString" prec="100" allow-null="true" length="100" scale="0" />
+      <column name="City" type="AnsiString" prec="50" allow-null="true" length="50" scale="0" />
+      <column name="Zipcode" type="AnsiString" prec="10" allow-null="true" length="10" scale="0" />
+      <column name="State" type="AnsiString" prec="30" allow-null="true" length="30" scale="0" />
+      <column name="Country" type="AnsiString" prec="30" allow-null="true" length="30" scale="0" />
+      <column name="Phone" type="AnsiString" prec="20" allow-null="true" length="20" scale="0" />
+      <column name="Fax" type="AnsiString" prec="20" allow-null="true" length="20" scale="0" />
+      <column name="Email" type="AnsiString" prec="50" allow-null="true" length="50" scale="0" />
+      <column name="Business_Category_Id" type="VarNumeric" prec="18" allow-null="true" length="9" scale="0" foreign="true" primary-table="Item_Category" primary-column="Item_category_ID" foreign-key="FK_Customer_Item_Category" />
+      <column name="Login_ID" type="AnsiString" prec="20" length="20" scale="0" />
+      <column name="Password" type="AnsiString" prec="20" length="20" scale="0" />
+      <column name="Credit_Rating_ID" type="VarNumeric" prec="18" length="9" scale="0" foreign="true" primary-table="Credit_Rating" primary-column="Credit_Rating_Id" foreign-key="FK_Customer_Credit_Rating" />
+      <column name="Join_Date" type="DateTime" prec="23" length="8" scale="3" />
+    </table>
+    <table name="Item_Condition">
+      <column name="Item_Condition_Id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Description" type="AnsiString" prec="50" allow-null="true" length="50" scale="0" />
+    </table>
+    <table name="Item">
+      <column name="Item_Id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" foreign="true" primary-table="Item" primary-column="Item_Id" foreign-key="FK_Item_Item" />
+      <column name="Customer_Id" type="VarNumeric" prec="18" length="9" scale="0" foreign="true" primary-table="Customer" primary-column="Customer_ID" foreign-key="FK_Item_Customer" />
+      <column name="Item_Category_Id" type="VarNumeric" prec="18" length="9" scale="0" foreign="true" primary-table="Item_Category" primary-column="Item_category_ID" foreign-key="FK_Item_Item_Category" />
+      <column name="Title" type="AnsiString" prec="50" length="50" scale="0" />
+      <column name="Description" type="AnsiString" prec="-1" allow-null="true" length="-1" scale="0" />
+      <column name="Quantity" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Price" type="Double" prec="53" length="8" scale="0" />
+      <column name="Item_Condition_Id" type="VarNumeric" prec="18" length="9" scale="0" foreign="true" primary-table="Item_Condition" primary-column="Item_Condition_Id" foreign-key="FK_Item_Item_Condition" />
+      <column name="Bidding_Start_Date" type="DateTime" prec="23" allow-null="true" length="8" scale="3" />
+      <column name="Bidding_End_Date" type="DateTime" prec="23" allow-null="true" length="8" scale="3" />
+      <column name="Successful_Bid_Id" type="VarNumeric" prec="18" allow-null="true" length="9" scale="0" foreign="true" primary-table="Bid" primary-column="Bid_Id" foreign-key="FK_Item_Bid" />
+      <column name="Comment" type="AnsiString" prec="-1" allow-null="true" length="-1" scale="0" />
+    </table>
+    <table name="Payment">
+      <column name="Payment_Id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Payment_Method_Id" type="VarNumeric" prec="18" length="9" scale="0" foreign="true" primary-table="Payment_Method" primary-column="Payment_Method_id" foreign-key="FK_Payment_Payment_Method" />
+      <column name="Payment_Date" type="DateTime" prec="23" allow-null="true" length="8" scale="3" />
+    </table>
+    <table name="Payment_Method">
+      <column name="Payment_Method_id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Description" type="AnsiString" prec="50" allow-null="true" length="50" scale="0" />
+    </table>
+    <table name="Shipment_Mode">
+      <column name="Shipment_Mode_Id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Description" type="AnsiString" prec="50" allow-null="true" length="50" scale="0" />
+    </table>
+    <table name="Shipment">
+      <column name="Shipment_Id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Shipment_Mode_Id" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Cost" type="Double" prec="53" allow-null="true" length="8" scale="0" />
+      <column name="Comment" type="AnsiString" prec="-1" allow-null="true" length="-1" scale="0" />
+    </table>
+    <table name="Shipment_Item">
+      <column name="Shipment_Id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" foreign="true" primary-table="Shipment" primary-column="Shipment_Id" foreign-key="FK_Shipment_Item_Shipment" />
+      <column name="Item_Id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" foreign="true" primary-table="Item" primary-column="Item_Id" foreign-key="FK_Shipment_Item_Item" />
+    </table>
+    <table name="Bid">
+      <column name="Bid_Id" primary="true" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Item_Id" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Customer_Id" type="VarNumeric" prec="18" length="9" scale="0" foreign="true" primary-table="Customer" primary-column="Customer_ID" foreign-key="FK_Bid_Customer" />
+      <column name="Amount" type="Double" prec="53" length="8" scale="0" />
+      <column name="Payment_Id" type="VarNumeric" prec="18" allow-null="true" length="9" scale="0" foreign="true" primary-table="Payment" primary-column="Payment_Id" foreign-key="FK_Bid_Payment" />
+      <column name="Shipment_Id" type="VarNumeric" prec="18" allow-null="true" length="9" scale="0" foreign="true" primary-table="Shipment" primary-column="Shipment_Id" foreign-key="FK_Bid_Shipment" />
+      <column name="Comment" type="AnsiString" prec="-1" allow-null="true" length="-1" scale="0" />
+    </table>
+    <table name="Item_Category">
+      <column name="Item_category_ID" primary="true" type="VarNumeric" prec="18" length="9" scale="0" />
+      <column name="Description" type="AnsiString" prec="50" allow-null="true" length="50" scale="0" />
+    </table>
+  </source>
+</domain>
